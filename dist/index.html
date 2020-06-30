@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User interface</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/ionicons.min.css">
+    <link rel="stylesheet" href="./css/AdminLTE.min.css">
+    <link rel="stylesheet" href="./css/_all-skins.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+<!--    Mapbox component-->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+    <link
+            rel="stylesheet"
+            href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+            type="text/css"
+    />
+    <script src="js/blockly_compressed.js"></script>
+    <script src="js/blocks_compressed.js"></script>
+    <script src="js/javascript_compressed.js"></script>
+    <script src="js/en.js"></script>
+    <script src="js/aframe_generators.js"></script>
+    <script src="js/aframe_blocks.js"></script>
+    <style>
+
+        .dropzone{
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .placeholder{
+            width: 100%;
+            max-width: 500px;
+            border-radius: .5em;
+            background: #eee;
+            padding: 2em;
+            text-align: center;
+        }
+        .upload-btn{
+            margin-top: 2em;
+        }
+        .gui-controller{
+            position: absolute;
+            top:55px;
+            right: 18px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="skin-blue sidebar-collapse">
+<div class="wrapper">
+    <header class="main-header">
+        <!-- Logo -->
+        <a href="../../index2.html" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>X</b>R</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>Blockly</b>XR</span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#" class="btn btn-flat" id="btnExportXR" title="Export WebXR"><i class="fa fa-fw fa-cubes"></i></a>
+                    </li>
+                    <li>
+                        <a href="#" class="btn btn-flat" id="btnExportVR" title="Export WebVR"><i class="fa fa-fw fa-simplybuilt"></i></a>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle="control-sidebar" title="Settings"><i class="fa fa-gears"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab1" id="btnTab1" data-toggle="tab">Design</a> </li>
+                            <li><a href="#tab2" id="btnTab2" data-toggle="tab">Procedures</a> </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab1">
+                                <div id="map" style="width: 962px;height: 600px"></div>
+                            </div>
+                            <div class="tab-pane" id="tab2">
+                                <div id="blockly" style="height: 600px; width: 962px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="box box-solid">
+                        <div class="box-header with-border"><i class="fa fa-fw fa-cubes"></i><h3 class="box-title">Preview</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" id="play-button">Play <i class="fa fa-play"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body" id="three-content">
+                        </div>
+                    </div>
+                    <div class="box box-solid">
+                        <div class="box-header with-border"><i class="fa fa-fw fa-cloud-upload"></i><h3 class="box-title">Import 3D Model</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" id="importToScene"><i class="fa fa-upload" title="Import to the scene"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool"  data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body" id="gltf-content">
+                            <div class="gui-controller" id="dat-gui"></div>
+                            <div class="dropzone" id="dropZone">
+                                <div class="placeholder"><p>Drag glTF 2.0 file or folder here</p></div>
+                                <div class="upload-btn"><input type="file" id="importGLTF"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none">
+    <category name="Components" colour="270">
+        <block type="position" name="position">
+            <value name="VALUE">
+                <block type="vector3">
+                    <field name="x">0</field>
+                    <field name="y">0</field>
+                    <field name="z">0</field>
+                </block>
+            </value>
+        </block>
+        <block type="rotation" name="rotation">
+            <value name="VALUE">
+                <block type="vector3">
+                    <field name="x">0</field>
+                    <field name="y">0</field>
+                    <field name="z">0</field>
+                </block>
+            </value>
+        </block>
+        <block type="scale" name="scale">
+            <value name="VALUE">
+                <block type="vector3">
+                    <field name="x">1</field>
+                    <field name="y">1</field>
+                    <field name="z">1</field>
+                </block>
+            </value>
+        </block>
+        <block type="camera" name="camera">
+        </block>
+        <block type="look-at" name="look-at"></block>
+        <block type="background" name="background"></block>
+        <block type="geometry" name="geometry"></block>
+        <block type="material" name="material"></block>
+        <!--                    <block type="look-controls" name="look-controls"></block>-->
+        <block type="visible" name="visible"></block>
+        <block type="light" name="light"></block>
+    </category>
+    <category name="Primitives" colour="90">
+        <block type="button" name="button"></block>
+        <block type="nav_bar" name="nav_bar">
+            <field name="POSITION">fixed-top</field>
+            <statement name="content">
+                <block type="button">
+                    <field name="VAR">item</field>
+                    <field name="NAME">Button 1</field>
+                </block>
+            </statement>
+        </block>
+        <block type="a-box" name="a-box"></block>
+        <block type="a-gltf-model" name="a-gltf-model">
+            <field name="VAR">RobotExpressive</field>
+            <value name="SOURCE">
+                <block type="src_gltf">
+                    <field name="src">assets/models/scene.gltf</field>
+                </block>
+            </value>
+        </block>
+        <sep></sep>
+        <block type="a-circle" name="a-circle"></block>
+        <block type="a-cone" name="a-cone"></block>
+        <block type="a-cursor" name="a-cursor"></block>
+        <block type="a-sky" name="a-sky"></block>
+        <block type="a-camera" name="a-camera"></block>
+
+        <block type="a-obj-model" name="a-obj-model"></block>
+    </category>
+
+
+    </category>
+
+    <category name="Data" colour="140">
+        <block type="animation" name="animation"></block>
+        <block type="audio-list" name="audio-list"></block>
+        <block type="src_gltf" name="gltf"></block>
+        <block type="text"></block>
+        <block type="vector3"></block>
+    </category>
+    <category name="Actions" colour="220">
+        <block type="behavior" name="behavior"></block>
+        <block type="stop_audio" name="stop_audio"></block>
+        <block type="play_audio" name="play_audio">
+            <value name="AUDIO">
+                <block type="audio-list" name="audio-list"></block>
+            </value>
+        </block>
+        <block type="display_message" name="display_message">
+            <value name="MESSAGE">
+                <block type="text">
+                    <field name="TEXT">Hello world</field>
+                </block>
+            </value>
+        </block>
+        <sep></sep>
+        <block type="move_object" name="move_object">
+            <field name="VAR">RobotExpressive</field>
+            <value name="START">
+                <block type="vector3">
+                    <field name="x">0</field>
+                    <field name="y">0</field>
+                    <field name="z">0</field>
+                </block>
+            </value>
+            <value name="END">
+                <block type="vector3">
+                    <field name="x">0</field>
+                    <field name="y">0</field>
+                    <field name="z">0</field>
+                </block>
+            </value>
+        </block>
+        <block type="set_object_animation" name="set_object_animation">
+            <field name="VAR">item</field>
+            <value name="ANIMATION">
+                <block type="animation">
+                    <field name="ANIMATION">animation_0</field>
+                </block>
+            </value>
+        </block>
+        <block type="trigger_behavior" name="trigger_behavior"></block>
+    </category>
+
+    <category name="Functions" colour="300">
+        <block type="component_init" name="component_init"></block>
+        <block type="component_init_function" name="component_init_function">
+            <field name="VAR">item</field>
+            <value name="content">
+                <block type="behavior">
+                    <statement name="NAME">
+                        <block type="display_message">
+                            <value name ="MESSAGE">
+                                <block type="text">
+                                    <field name="TEXT">Hello world</field>
+                                </block>
+                            </value>
+                        </block>
+                    </statement>
+                </block>
+            </value>
+        </block>
+        <block type="move_object_finish" name="move_object_finish"></block>
+        <block type="wait_second" name="wait_second"></block>
+    </category>
+
+    <category name="Variables" custom="VARIABLE" colour="40">
+    </category>
+
+
+</xml>
+</body>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/adminlte.min.js"></script>
+<script src="js/three.js"></script>
+<script src="js/OrbitControls.js"></script>
+<script src="js/GLTFLoader.js"></script>
+<script src="js/three-geo.min.js"></script>
+<script src="js/dat.gui.min.js"></script>
+<script src="js/createjs.min.js"></script>
+<script src="js/app.js"></script>
+</html>
